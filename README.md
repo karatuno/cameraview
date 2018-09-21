@@ -1,4 +1,10 @@
-# CameraView
+# CustomCameraView
+
+// forked from google cameraview
+-removed aspect ration selector
+-default full screen aspect ratio
+-removed black screen after OonResume is called in API 23
+
 
 *This is a preview release. The API is subject to change.*
 
