@@ -30,7 +30,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -121,6 +120,15 @@ public class MainActivity extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
+
+    }
+
+    protected void cameraBuilder(){
+        final Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
+        int n = ratios.size();
+        AspectRatio arr[] = new AspectRatio[n];
+        System.arraycopy(ratios.toArray(), 0, arr, 0, n);
+        mCameraView.setAspectRatio(arr[n-1]);
     }
 
     @Override
@@ -129,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
+            cameraBuilder();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             ConfirmationDialogFragment
@@ -174,7 +183,13 @@ public class MainActivity extends AppCompatActivity implements
                     Toast.makeText(this, R.string.camera_permission_not_granted,
                             Toast.LENGTH_SHORT).show();
                 }
-                // No need to start camera here; it is handled by onResume
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+////                    mCameraView.start();
+////                    cameraBuilder();
+//                    Log.i("ggg","request granted");
+//                }
+                    // No need to start camera here; it is handled by onResume
                 break;
         }
     }
@@ -188,16 +203,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.aspect_ratio:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (mCameraView != null
-                        && fragmentManager.findFragmentByTag(FRAGMENT_DIALOG) == null) {
-                    final Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
-                    final AspectRatio currentRatio = mCameraView.getAspectRatio();
-                    AspectRatioFragment.newInstance(ratios, currentRatio)
-                            .show(fragmentManager, FRAGMENT_DIALOG);
-                }
-                return true;
+
             case R.id.switch_flash:
                 if (mCameraView != null) {
                     mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.length;

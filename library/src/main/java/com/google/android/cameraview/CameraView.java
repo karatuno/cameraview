@@ -95,7 +95,7 @@ public class CameraView extends FrameLayout {
             return;
         }
         // Internal setup
-        final PreviewImpl preview = createPreviewImpl(context);
+        final PreviewImpl preview = createPreviewImpl(context,false);
         mCallbacks = new CallbackBridge();
         if (Build.VERSION.SDK_INT < 21) {
             mImpl = new Camera1(mCallbacks, preview);
@@ -128,7 +128,9 @@ public class CameraView extends FrameLayout {
     }
 
     @NonNull
-    private PreviewImpl createPreviewImpl(Context context) {
+    private PreviewImpl createPreviewImpl(Context context, boolean isFallback) {
+        if(isFallback)
+            return new SurfaceViewPreview(context, this);
         PreviewImpl preview;
         if (Build.VERSION.SDK_INT < 14) {
             preview = new SurfaceViewPreview(context, this);
@@ -247,7 +249,7 @@ public class CameraView extends FrameLayout {
             //store the state ,and restore this state after fall back o Camera1
             Parcelable state=onSaveInstanceState();
             // Camera2 uses legacy hardware layer; fall back to Camera1
-            mImpl = new Camera1(mCallbacks, createPreviewImpl(getContext()));
+            mImpl = new Camera1(mCallbacks, createPreviewImpl(getContext(),true));
             onRestoreInstanceState(state);
             mImpl.start();
         }
@@ -488,7 +490,7 @@ public class CameraView extends FrameLayout {
             out.writeInt(flash);
         }
 
-        public static final Parcelable.Creator<SavedState> CREATOR
+        public static final Creator<SavedState> CREATOR
                 = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<SavedState>() {
 
             @Override
