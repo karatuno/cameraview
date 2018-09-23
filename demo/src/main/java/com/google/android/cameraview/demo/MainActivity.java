@@ -36,9 +36,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.cameraview.AspectRatio;
@@ -88,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements
     private CameraView mCameraView;
 
     private Handler mBackgroundHandler;
+    FloatingActionButton fab;
+    Toolbar toolbar;
+    ImageView next,back,edit;
+    boolean flag=false;
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -110,18 +116,56 @@ public class MainActivity extends AppCompatActivity implements
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.take_picture);
+        fab = (FloatingActionButton) findViewById(R.id.take_picture);
+
+        next = (ImageView)findViewById(R.id.toPrivacySelector);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //work left
+                //to privacy selector
+            }
+        });
+        back = (ImageView)findViewById(R.id.goBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                fuckGoBack();
+            }
+        });
+        edit = (ImageView)findViewById(R.id.editText);
+        //work left
+        next.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.INVISIBLE);
+        edit.setVisibility(View.INVISIBLE);
         if (fab != null) {
             fab.setOnClickListener(mOnClickListener);
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+//        back = (ImageView) findViewById(R.id.back);
+//        doodle = (ImageView) findViewById(R.id.doodle);
+//        back.setVisibility(View.INVISIBLE);
+//        doodle.setVisibility(View.INVISIBLE);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
-
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if(flag==true) {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+                fuckGoBack();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     protected void cameraBuilder(){
         final Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
@@ -130,6 +174,17 @@ public class MainActivity extends AppCompatActivity implements
         System.arraycopy(ratios.toArray(), 0, arr, 0, n);
         mCameraView.setAspectRatio(arr[n-1]);
     }
+
+    protected void fuckGoBack()
+    {   flag= false;
+        mCameraView.start();
+        toolbar.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.VISIBLE);
+        next.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.INVISIBLE);
+        edit.setVisibility(View.INVISIBLE);
+    }
+
 
     @Override
     protected void onResume() {
@@ -232,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private Handler getBackgroundHandler() {
-        if (mBackgroundHandler == null) {
+         if (mBackgroundHandler == null) {
             HandlerThread thread = new HandlerThread("background");
             thread.start();
             mBackgroundHandler = new Handler(thread.getLooper());
@@ -256,6 +311,13 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
             Log.d(TAG, "onPictureTaken " + data.length);
+            toolbar.setVisibility(View.INVISIBLE);
+            fab.setVisibility(View.INVISIBLE);
+            next.setVisibility(View.VISIBLE);
+            back.setVisibility(View.VISIBLE);
+            edit.setVisibility(View.VISIBLE);
+            flag=true;
+
             Toast.makeText(cameraView.getContext(), R.string.picture_taken, Toast.LENGTH_SHORT)
                     .show();
             getBackgroundHandler().post(new Runnable() {
@@ -265,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements
                             "picture.jpg");
                     OutputStream os = null;
                     try {
+                        mCameraView.stop();
                         os = new FileOutputStream(file);
                         os.write(data);
                         os.close();

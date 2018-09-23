@@ -45,7 +45,39 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/ic_camera"
         app:useCompatPadding="true"/>
+
+    <ImageView
+        android:id="@+id/toPrivacySelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:padding="5dp"
+        app:srcCompat="@drawable/ic_right_chevron"/>
+
+    <ImageView
+        android:id="@+id/goBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ic_cancel"
+        android:layout_margin="20dp"
+        android:padding="5dp"
+        android:layout_alignParentLeft="true"/>
+
+    <ImageView
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ic_alpha"
+        android:layout_margin="20dp"
+        android:padding="5dp"
+        android:layout_alignParentRight="true"/>
+
 
 </RelativeLayout>
