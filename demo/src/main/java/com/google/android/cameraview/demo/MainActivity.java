@@ -134,9 +134,11 @@ public class MainActivity extends AppCompatActivity implements
         });
         edit = (ImageView)findViewById(R.id.editText);
         //work left
+
         next.setVisibility(View.INVISIBLE);
         back.setVisibility(View.INVISIBLE);
         edit.setVisibility(View.INVISIBLE);
+
         if (fab != null) {
             fab.setOnClickListener(mOnClickListener);
         }
@@ -158,8 +160,13 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if(flag==true) {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-
                 fuckGoBack();
+                return true;
+            }
+        }
+        if(flag==false) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                mCameraView.takePicture();
                 return true;
             }
         }
@@ -191,8 +198,10 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
-            mCameraView.start();
+            if (flag==false){
+            fuckGoBack();}
             cameraBuilder();
+
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             ConfirmationDialogFragment
