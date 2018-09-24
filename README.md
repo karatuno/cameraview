@@ -1,11 +1,11 @@
-# CustomCameraView
+# Custom CameraView
 
 // forked from google cameraview  
 -removed aspect ration selector  
 -default full screen aspect ratio  
 -removed black screen after OnResume is called in API 23  
 
-# Update 23/09/2018
+## Update 23/09/2018
 - Frame Stop Capture preview
 
 
@@ -34,7 +34,7 @@ Requires API Level 9. The library uses Camera 1 API on API Level 9-20 and Camera
   
 ## Added Features
 
-  - Aspect ratio automatically selected according to screen
+  - Aspect ratio automatically selected according to screen  
   - Frame stop capture preview
 
 
